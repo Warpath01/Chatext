@@ -24,7 +24,6 @@ export const useChatStore = create((set, get) => ({
             set({ users: data });
         } catch (error) {
             console.log("Error in getUsers store", error.message)
-            res.status(500).json({ message: "Internal Server Error." })
         }
     },
 
@@ -41,7 +40,6 @@ export const useChatStore = create((set, get) => ({
             set({ messages: data });
         } catch (error) {
             console.log("Error in getPublicMessages store", error.message)
-            res.status(500).json({ message: "Internal Server Error." })
         }
     },
 
@@ -63,7 +61,6 @@ export const useChatStore = create((set, get) => ({
             set({ messages: [...messages, data] });
         } catch (error) {
             console.log("Error in sendPublicMessages store", error.message)
-            res.status(500).json({ message: "Internal Server Error." })
         }
     },
 
@@ -82,7 +79,6 @@ export const useChatStore = create((set, get) => ({
             set({ messages: data });
         } catch (error) {
             console.log("Error in getPersonalMessage store", error.message)
-            res.status(500).json({ message: "Internal Server Error." })
         }
     },
 
@@ -102,7 +98,6 @@ export const useChatStore = create((set, get) => ({
             set({ messages: [...messages, data] });
         } catch (error) {
             console.log("Error in sendPersonalMessage store", error.message)
-            res.status(500).json({ message: "Internal Server Error." })
         }
 
     },
