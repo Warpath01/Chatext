@@ -21,7 +21,6 @@ export const useHomeStore = create((set) => ({
             set({ users: data });
         } catch (error) {
             console.log("Error in getUsers store", error.message)
-            res.status(500).json({ message: "Internal Server Error." })
         }
     },
     getPosts: async () => {
@@ -37,7 +36,6 @@ export const useHomeStore = create((set) => ({
             set({ posts: data });
         } catch (error) {
             console.log("Error in getUsers store", error.message)
-            res.status(500).json({ message: "Internal Server Error." })
         }
     },
 
