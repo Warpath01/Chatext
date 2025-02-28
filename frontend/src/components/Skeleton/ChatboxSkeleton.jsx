@@ -11,13 +11,7 @@ const ChatboxSkeleton = () => {
     >
       <div className="text-center border p-4 rounded shadow-sm">
         <i>
-          <h3 className="text-muted">
-            <SiWelcometothejungle />
-            elcome to <TbCircleLetterCFilled />
-            ha
-            <TbCircleLetterT />
-            ext
-          </h3>
+          <h3 className="text-muted">Welcome to Cha Text</h3>
         </i>
         <span className="text-secondary lead">
           Enjoy communicating with anyone

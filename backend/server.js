@@ -18,7 +18,7 @@ dotenv.config();
 // OR allow all origins (for development purposes)
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: import.meta.env.MODE === "development" ? "http://localhost:5173" : "/",
         credentials: true,
     })
 );
@@ -43,13 +43,13 @@ app.use('/profile-pics', express.static(path.join(__dirname, 'uploaded', 'profil
 app.use('/post-pics', express.static(path.join(__dirname, 'uploaded', 'posts')));
 
 
-// if (process.env.NODE_ENV === "production") {
-//     app.use(express.static(path.join(__otherDirname, '../frontend/dist')));
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__otherDirname, '../frontend/dist')));
 
-//     app.get("*", (req, res) => {
-//         res.sendFile(path.join(__otherDirname, '../frontend', 'dist', 'index.html'));
-//     })
-// }
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__otherDirname, '../frontend', 'dist', 'index.html'));
+    })
+}
 
 const startServer = async () => {
     await connectDB();
@@ -65,25 +65,8 @@ const startServer = async () => {
 };
 startServer();
 
+export default app;
 
 
 
 
-
-
-
-// await adding();
-
-
-// const adding = () => {
-//     fetch("http://localhost:7000/api/chats/add", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({ text: "Hello, World!" }),
-//     })
-//         .then(response => response.json())
-//         .then(data => console.log("Chat added:", data))
-//         .catch(error => console.error("Error:", error));
-// };

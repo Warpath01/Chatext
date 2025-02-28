@@ -65,7 +65,6 @@ const Sidebar = () => {
               className="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow"
               style={{ width: "35px", height: "35px", cursor: "pointer" }}
             >
-              <IoMdCamera />
               <input
                 type="file"
                 accept="image/*"

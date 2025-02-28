@@ -18,7 +18,6 @@ const Users = () => {
         className="d-flex flex-row justify-content-center w-100 border rounded shadow-sm align-items-center"
         style={{ gap: "10px" }}
       >
-        <FiUsers />
         Online Users :{" "}
         <span>
           {users.filter((user) => onlineContacts.includes(user._id)).length}

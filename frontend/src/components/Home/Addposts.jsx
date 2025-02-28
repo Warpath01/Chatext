@@ -68,9 +68,7 @@ const AddPosts = () => {
         <div className="card-body p-2">
           {" "}
           {/* Smaller padding */}
-          <h5 className="card-title fs-6 text-success">
-            <IoArrowRedoOutline /> Create a Post <TfiWrite />
-          </h5>{" "}
+          <h5 className="card-title fs-6 text-success">Create a Post</h5>{" "}
           {/* Smaller font size */}
           <form onSubmit={handleSubmit}>
             {isFileInputVisible && (

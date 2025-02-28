@@ -2,7 +2,7 @@ import { create } from "zustand"
 import { useAuth } from "../context/AuthContext";
 import { useAuthStore } from "./auth.store";
 
-const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "/api";
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "/";
 
 export const useChatStore = create((set, get) => ({
     messages: [],

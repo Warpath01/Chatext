@@ -5,7 +5,7 @@ import { persist } from "zustand/middleware";
 import { io } from "socket.io-client";
 import { useChatStore } from "./chat.store";
 
-const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "/api";
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "/";
 
 let socketInstance = null;
 

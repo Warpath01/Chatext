@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Users from "./Users";
 import { useChatStore } from "../../store/chat.store";
-import { MdOutlineForum } from "react-icons/md";
+import { MdOutlineForum } from "react-icons/io5";
 
 const Contacts = () => {
   const { setSelectedUser, setSelectWorldChat } = useChatStore();
@@ -26,7 +26,7 @@ const Contacts = () => {
         className="btn btn-outline-success  text-center fs-5"
         onClick={handleSelectedUser}
       >
-        World Chat <MdOutlineForum />
+        World Chat
       </button>
       <hr className="w-100" />
 
