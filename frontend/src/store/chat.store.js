@@ -1,4 +1,4 @@
-import { create } from "zustand"
+import { create } from "zustand";
 import { useAuth } from "../context/AuthContext";
 import { useAuthStore } from "./auth.store";
 
@@ -10,20 +10,19 @@ export const useChatStore = create((set, get) => ({
     selectedUser: null,
     selectWorldChat: false,
 
-
     getUsers: async () => {
         try {
             const res = await fetch(`${BASE_URL}/api/posts/users`, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
-                credentials: "include",
+                credentials: "include"
             });
             const data = await res.json();
             set({ users: data });
         } catch (error) {
-            console.log("Error in getUsers store", error.message)
+            console.log("Error in getUsers store", error.message);
         }
     },
 
@@ -32,82 +31,77 @@ export const useChatStore = create((set, get) => ({
             const res = await fetch(`${BASE_URL}/api/messages/all`, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
-                credentials: "include",
-            })
+                credentials: "include"
+            });
             const data = await res.json();
             set({ messages: data });
         } catch (error) {
-            console.log("Error in getPublicMessages store", error.message)
+            console.log("Error in getPublicMessages store", error.message);
         }
     },
 
-
     sendPublicMessages: async (message) => {
         try {
-
-            const { messages } = get()
+            const { messages } = get();
 
             const res = await fetch(`${BASE_URL}/api/messages/send/all`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(message),
-                credentials: "include",
-            })
+                credentials: "include"
+            });
             const data = await res.json();
             set({ messages: [...messages, data] });
         } catch (error) {
-            console.log("Error in sendPublicMessages store", error.message)
+            console.log("Error in sendPublicMessages store", error.message);
         }
     },
-
-
 
     getPersonalMessage: async (userId) => {
         try {
             const res = await fetch(`${BASE_URL}/api/messages/${userId}`, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
-                credentials: "include",
-            })
+                credentials: "include"
+            });
             const data = await res.json();
             set({ messages: data });
         } catch (error) {
-            console.log("Error in getPersonalMessage store", error.message)
+            console.log("Error in getPersonalMessage store", error.message);
         }
     },
 
     sendPersonalMessage: async (message) => {
         try {
-            const { selectedUser, messages } = get()
+            const { selectedUser, messages } = get();
 
             const res = await fetch(`${BASE_URL}/api/messages/send/${selectedUser._id}`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(message),
-                credentials: "include",
-            })
+                credentials: "include"
+            });
             const data = await res.json();
             set({ messages: [...messages, data] });
         } catch (error) {
-            console.log("Error in sendPersonalMessage store", error.message)
+            console.log("Error in sendPersonalMessage store", error.message);
         }
-
     },
 
-    // realtime application -------- Personal
+    // Realtime application - Personal
     receiveMessage: async () => {
         const { selectedUser } = get();
         if (!selectedUser) return;
 
-        const socket = useAuthStore.getState().getSocket(); // Get the socket instance safely
+        const socket = useAuthStore.getState().getSocket();
         if (!socket) return console.warn("Socket is not initialized yet.");
 
         socket.on("newMessage", (newMessage) => {
@@ -115,18 +109,17 @@ export const useChatStore = create((set, get) => ({
             set({ messages: [...get().messages, newMessage] });
         });
     },
-    unReceiveMessage: async () => {
 
-        const socket = useAuthStore.getState().getSocket(); // Get the socket instance safely
+    unReceiveMessage: async () => {
+        const socket = useAuthStore.getState().getSocket();
         if (!socket) return console.warn("Socket is not initialized yet.");
         socket.off("newMessage");
     },
 
-
-    // realtime applictaion -------- Public
+    // Realtime application - Public
     receivePublicMessages: async () => {
         const { selectWorldChat } = get();
-        if (selectWorldChat === true) {
+        if (selectWorldChat) {
             const socket = useAuthStore.getState().getSocket();
             if (!socket) return console.warn("Socket is not initialized yet.");
 
@@ -135,14 +128,13 @@ export const useChatStore = create((set, get) => ({
             });
         }
     },
-    unReceivePublicMessages: async () => {
 
-        const socket = useAuthStore.getState().getSocket(); // Get the socket instance safely
+    unReceivePublicMessages: async () => {
+        const socket = useAuthStore.getState().getSocket();
         if (!socket) return console.warn("Socket is not initialized yet.");
         socket.off("newPublicMessage");
     },
 
-
     setSelectedUser: (selectedUser) => set({ selectedUser }),
-    setSelectWorldChat: (selectWorldChat) => set({ selectWorldChat }),
-}))
+    setSelectWorldChat: (selectWorldChat) => set({ selectWorldChat })
+}));
