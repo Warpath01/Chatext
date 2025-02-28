@@ -18,7 +18,7 @@ dotenv.config();
 // OR allow all origins (for development purposes)
 app.use(
     cors({
-        origin: process.env.NODE_ENV === "development" ? "http://localhost:5173" : "https://chatext-elfm.onrender.com",
+        origin: process.env.NODE_ENV === "development" ? "http://localhost:5173" : "https://chatext-client.onrender.com",
         credentials: true,
     })
 );
