@@ -132,7 +132,6 @@ export const useAuthStore = create(
                 } catch (error) {
                     set({ authUser: null });
                     console.log("Error in signup store", error.message)
-                    res.status(500).json({ message: "Internal Server Error." })
                 }
             },
 
@@ -175,7 +174,6 @@ export const useAuthStore = create(
                     get().disConnectSocket()
                 } catch (error) {
                     console.log("Error in logout store", error.message)
-                    res.status(500).json({ message: "Internal Server Error." })
                 }
             },
 
