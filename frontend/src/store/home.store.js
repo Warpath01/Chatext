@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { create } from "zustand"
+import { create } from "zustand";
 
 const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "https://chatext-elfm.onrender.com";
 
@@ -13,14 +13,14 @@ export const useHomeStore = create((set) => ({
             const res = await fetch(`${BASE_URL}/api/posts/users`, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
-                credentials: "include",
+                credentials: "include"
             });
             const data = await res.json();
             set({ users: data });
         } catch (error) {
-            console.log("Error in getUsers store", error.message)
+            console.log("Error in getUsers store", error.message);
         }
     },
     getPosts: async () => {
@@ -28,14 +28,14 @@ export const useHomeStore = create((set) => ({
             const res = await fetch(`${BASE_URL}/api/posts/all`, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
-                credentials: "include",
-            })
+                credentials: "include"
+            });
             const data = await res.json();
             set({ posts: data });
         } catch (error) {
-            console.log("Error in getUsers store", error.message)
+            console.log("Error in getPosts store", error.message);
         }
     },
 
@@ -51,5 +51,5 @@ export const useHomeStore = create((set) => ({
         } catch (error) {
             console.log("Error in addPosts store", error.message);
         }
-    },
-}))
+    }
+}));
