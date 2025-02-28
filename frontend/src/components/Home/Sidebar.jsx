@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/auth.store";
-import { IoMdCamera } from "react-icons/io";
 import Users from "./Users";
 
 const Sidebar = () => {

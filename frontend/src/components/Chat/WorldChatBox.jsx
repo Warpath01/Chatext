@@ -3,8 +3,6 @@ import world from "../../assets/world.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import WorldMessages from "./WorldMessages";
 import { useChatStore } from "../../store/chat.store";
-import { MdOutlineForum } from "react-icons/io5";
-import { useAuthStore } from "../../store/auth.store";
 import { useRef } from "react";
 
 const ChatBox = () => {
