@@ -18,7 +18,7 @@ dotenv.config();
 // OR allow all origins (for development purposes)
 app.use(
     cors({
-        origin: import.meta.env.MODE === "development" ? "http://localhost:5173" : "/",
+        origin: process.env.NODE_ENV === "development" ? "http://localhost:5173" : "/",
         credentials: true,
     })
 );
