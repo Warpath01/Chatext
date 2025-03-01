@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store/auth.store";
 import { Link, useNavigate } from "react-router-dom"; // Import Link for routing
-import { useAuth } from "../context/AuthContext";
 
 const LoginForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -9,6 +8,7 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
+  const { setIsLoading } = useAuthStore();
 
   const { login } = useAuthStore();
 
@@ -17,8 +17,9 @@ const LoginForm = () => {
   // handle submit ---
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     await login(formData);
-    navigate("/");
+    navigate("/home");
   };
 
   return (
