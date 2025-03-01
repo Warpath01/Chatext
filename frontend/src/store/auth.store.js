@@ -32,7 +32,7 @@ export const useAuthStore = create(
                 }
                 return response.json();
             } catch (error) {
-                console.log(error);
+                console.log("error fetchWithInterceptor");
             }
         },
 
@@ -47,7 +47,7 @@ export const useAuthStore = create(
                 get().connectSocket();
             } catch (error) {
                 set({ authUser: null });
-                console.log(error);
+                console.log("error checkAuth");
             } finally {
                 set({ isLoading: false });
             }
