@@ -19,13 +19,11 @@ export const useChatStore = create((set, get) => ({
                 },
                 credentials: "include"
             });
-              if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+              if (!res.ok) throw new Error("No users!");
             const data = await res.json();
             set({ users: data });
         } catch (error) {
-            console.log("Error in getUsers store");
+            console.log("No users!");
         }
     },
 
@@ -38,13 +36,11 @@ export const useChatStore = create((set, get) => ({
                 },
                 credentials: "include"
             });
-              if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+if (!res.ok) throw new Error("No Public Message!");
             const data = await res.json();
             set({ messages: data });
         } catch (error) {
-            console.log("Error in getPublicMessages store");
+            console.log("No Public Message!");
         }
     },
 
@@ -60,13 +56,11 @@ export const useChatStore = create((set, get) => ({
                 body: JSON.stringify(message),
                 credentials: "include"
             });
-              if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+              if (!res.ok) throw new Error("Error in sending message!");
             const data = await res.json();
             set({ messages: [...messages, data] });
         } catch (error) {
-            console.log("Error in sendPublicMessages store");
+            console.log("Error in sending message!");
         }
     },
 
@@ -79,13 +73,11 @@ export const useChatStore = create((set, get) => ({
                 },
                 credentials: "include"
             });
-              if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+              if (!res.ok) throw new Error("No personal message!");
             const data = await res.json();
             set({ messages: data });
         } catch (error) {
-            console.log("Error in getPersonalMessage store");
+            console.log("No personal message!");
         }
     },
 
@@ -101,13 +93,11 @@ export const useChatStore = create((set, get) => ({
                 body: JSON.stringify(message),
                 credentials: "include"
             });
-              if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+               if (!res.ok) throw new Error("Error in sending message!");
             const data = await res.json();
             set({ messages: [...messages, data] });
         } catch (error) {
-            console.log("Error in sendPersonalMessage store");
+            console.log("Error in sending message!");
         }
     },
 
