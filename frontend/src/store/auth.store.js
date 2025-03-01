@@ -18,23 +18,21 @@ export const useAuthStore = create(
 
 
         fetchWithInterceptor: async (url, options = {}) => {
-            set({ isLoading: true });
-            try {
-                const token = get().authUser?.token;
-                const headers = { ...options.headers };
-                if (token) {
-                    headers["Authorization"] = `Bearer ${token}`;
-                }
-                const response = await fetch(url, { credentials: "include", headers, ...options });
-                if (!response.ok) {
-                    console.warn("An error occurred.");
-                    throw new Error(`Request failed (${response.status})`);
-                }
-                return response.json();
-            } catch (error) {
-                console.log("error fetchWithInterceptor");
-            }
-        },
+    set({ isLoading: true });
+    try {
+        const response = await fetch(url, { credentials: "include", ...options });
+        if (!response.ok) throw new Error(`Request failed (${response.status})`);
+        return response.headers.get("content-type")?.includes("application/json") 
+            ? response.json() 
+            : Promise.reject("Invalid response format");
+    } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
+    } finally {
+        set({ isLoading: false });
+    }
+};
+
 
 
 
