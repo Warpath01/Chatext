@@ -22,7 +22,7 @@ export const useChatStore = create((set, get) => ({
             const data = await res.json();
             set({ users: data });
         } catch (error) {
-            console.log("Error in getUsers store", error.message);
+            console.log("Error in getUsers store");
         }
     },
 
@@ -38,7 +38,7 @@ export const useChatStore = create((set, get) => ({
             const data = await res.json();
             set({ messages: data });
         } catch (error) {
-            console.log("Error in getPublicMessages store", error.message);
+            console.log("Error in getPublicMessages store");
         }
     },
 
@@ -57,7 +57,7 @@ export const useChatStore = create((set, get) => ({
             const data = await res.json();
             set({ messages: [...messages, data] });
         } catch (error) {
-            console.log("Error in sendPublicMessages store", error.message);
+            console.log("Error in sendPublicMessages store");
         }
     },
 
@@ -73,7 +73,7 @@ export const useChatStore = create((set, get) => ({
             const data = await res.json();
             set({ messages: data });
         } catch (error) {
-            console.log("Error in getPersonalMessage store", error.message);
+            console.log("Error in getPersonalMessage store");
         }
     },
 
@@ -92,7 +92,7 @@ export const useChatStore = create((set, get) => ({
             const data = await res.json();
             set({ messages: [...messages, data] });
         } catch (error) {
-            console.log("Error in sendPersonalMessage store", error.message);
+            console.log("Error in sendPersonalMessage store");
         }
     },
 
