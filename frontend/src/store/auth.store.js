@@ -15,35 +15,30 @@ export const useAuthStore = create((set, get) => ({
             myInfo: {},
             onlineContacts: [],
 
-            fetchWithInterceptor: async (url, options = {}) => {
+            checkAuth: async () => {
             set({ isLoading: true })
             try {
-                const response = await fetch(url, { credentials: "include", ...options });
-                if (!response.ok) {
+                const res = await fetch(`${BASE_URL}/api/auth/check`,
+                    {
+                        method: "GET",
+                        credentials: "include"
+                    });
+                if (!res.ok) {
                     console.warn("An error occurred.");
                     throw new Error(`Request failed (${response.status})`);
                 }
-
-                return response.json();
-            } catch (error) {
-                console.log("There is error");
-            }
-        },
-
-        checkAuth: async () => {
-            set({ isLoading: true })
-            try {
-                const data = await get().fetchWithInterceptor(`${BASE_URL}/api/auth/check`, { method: "GET" });
+                const data = res.json()
                 set({ authUser: data });
                 // Initialize the socket connection
                 get().connectSocket();
             } catch (error) {
                 set({ authUser: null });
-                 console.log("There is error");
+                console.log(error);
             } finally {
                 set({ isLoading: false });
             }
         },
+
 
             connectSocket: () => {
                 const { authUser } = get();
