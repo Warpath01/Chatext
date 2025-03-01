@@ -17,25 +17,28 @@ export const useAuthStore = create(
         isLoading: false,
 
         checkAuth: async () => {
-                try {
-                    const res = await fetch(`${BASE_URL}/api/auth/check`, {
-                        method: "GET",
-                        credentials: "include",
-                    });
-                    if (!res.ok) throw new Error(`Request failed (${response.status})`);
-                    const data = await res.json();
-                    set({ authUser: data });
-                    console.log(data);
+    try {
+        const res = await fetch(`${BASE_URL}/api/auth/check`, {
+            method: "GET",
+            credentials: "include",
+        });
 
-                    // Initialize the socket connection
-                    get().connectSocket();
-                } catch (error) {
-                    set({ authUser: null });
-                    console.log("error checkAuth ");
-                } finally {
-                    set({ isLoading: false });
-                }
-            },
+        if (!res.ok) throw new Error(`Request failed (${res.status})`); // Fixed variable reference
+
+        const data = await res.json();
+        set({ authUser: data });
+        console.log("Authenticated user:", data);
+
+        // Initialize the socket connection
+        get().connectSocket();
+    } catch (error) {
+        set({ authUser: null });
+        console.error("Error in checkAuth:", error.message); // Improved logging
+    } finally {
+        set({ isLoading: false });
+    }
+};
+
 
         connectSocket: () => {
             const { authUser } = get();
