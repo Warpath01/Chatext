@@ -81,6 +81,9 @@ export const useAuthStore = create(
                     },
                     credentials: "include",
                 });
+                  if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
                 const data = await res.json();
                 set({ myInfo: data });
             } catch (error) {
@@ -97,6 +100,9 @@ export const useAuthStore = create(
                     credentials: "include",
                     body: formData,
                 });
+                  if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
                 const data = await res.json();
                 return data;
             } catch (error) {
@@ -116,6 +122,9 @@ export const useAuthStore = create(
                     credentials: "include",
                     body: JSON.stringify(info),
                 });
+                  if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
 
                 const data = await res.json();
                 set({ authUser: data });
@@ -139,6 +148,9 @@ export const useAuthStore = create(
                     credentials: "include",
                     body: JSON.stringify(info),
                 });
+                  if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
                 const data = await res.json();
                 set({ authUser: data });
                 get().connectSocket();
@@ -159,6 +171,9 @@ export const useAuthStore = create(
                     },
                     credentials: "include",
                 });
+                  if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
                 set({ authUser: null });
                 console.log("Logged out successfully!");
                 get().disConnectSocket();
