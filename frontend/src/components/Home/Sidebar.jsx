@@ -3,11 +3,11 @@ import { useAuthStore } from "../../store/auth.store";
 import Users from "./Users";
 
 const Sidebar = () => {
-  const { updateProfile, checkAuth, authUser, getPersonalInfo } = useAuthStore();
+  const { updateProfile, checkAuth, authUser } = useAuthStore();
 
   const handleUploadImg = async (e) => {
     e.preventDefault();
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
 
     const formData = new FormData();
@@ -16,10 +16,10 @@ const Sidebar = () => {
     await updateProfile(formData);
     checkAuth();
   };
+
   useEffect(() => {
     checkAuth();
-    // getPersonalInfo();
-  }, []);
+  }, [checkAuth]);
 
   return (
     <div
@@ -48,14 +48,14 @@ const Sidebar = () => {
             }}
           >
             {authUser?.profilePic ? (
-  <img
-    src={`/profile-pics/${authUser.profilePic}`}
-    alt="Profile"
-    className="w-100 h-100 object-fit-cover"
-  />
-) : (
-  <span>{authUser?.fullName?.charAt(0) || "?"}</span>
-)}
+              <img
+                src={`/profile-pics/${authUser.profilePic}`}
+                alt="Profile"
+                className="w-100 h-100 object-fit-cover"
+              />
+            ) : (
+              <span>{authUser?.fullName?.charAt(0) || "?"}</span>
+            )}
           </div>
 
           {/* Update Button */}
@@ -75,8 +75,8 @@ const Sidebar = () => {
         </div>
 
         {/* User Info */}
-        <h6 className="mb-0 mt-2">{authUser.fullName  || "?"}</h6>
-        <p className="text-muted small">{authUser.email  || "?"}</p>
+        <h6 className="mb-0 mt-2">{authUser?.fullName || "?"}</h6>
+        <p className="text-muted small">{authUser?.email || "?"}</p>
       </div>
 
       {/* Online Users Section */}
