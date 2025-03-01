@@ -47,15 +47,15 @@ const Sidebar = () => {
               color: "white",
             }}
           >
-            {myInfo.profilePic ? (
-              <img
-                src={`/profile-pics/${myInfo.profilePic}`}
-                alt="Profile"
-                className="w-100 h-100 object-fit-cover"
-              />
-            ) : (
-              <span>{myInfo.fullName?.charAt(0)}</span>
-            )}
+            {myInfo?.profilePic ? (
+  <img
+    src={`/profile-pics/${myInfo.profilePic}`}
+    alt="Profile"
+    className="w-100 h-100 object-fit-cover"
+  />
+) : (
+  <span>{myInfo?.fullName?.charAt(0) || "?"}</span>
+)}
           </div>
 
           {/* Update Button */}
