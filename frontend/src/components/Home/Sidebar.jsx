@@ -75,8 +75,8 @@ const Sidebar = () => {
         </div>
 
         {/* User Info */}
-        <h6 className="mb-0 mt-2">{myInfo.fullName}</h6>
-        <p className="text-muted small">{myInfo.email}</p>
+        <h6 className="mb-0 mt-2">{myInfo.fullName  || "?"}</h6>
+        <p className="text-muted small">{myInfo.email  || "?"}</p>
       </div>
 
       {/* Online Users Section */}
