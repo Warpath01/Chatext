@@ -31,7 +31,7 @@ export const useAuthStore = create(
                     get().connectSocket();
                 } catch (error) {
                     set({ authUser: null });
-                    console.log(error.message);
+                    console.log("error checkAuth ");
                 } finally {
                     set({ isLoading: false });
                 }
