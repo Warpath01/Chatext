@@ -16,6 +16,7 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     signup(formData);
     navigate("/login");
   };
