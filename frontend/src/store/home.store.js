@@ -20,7 +20,7 @@ export const useHomeStore = create((set) => ({
             const data = await res.json();
             set({ users: data });
         } catch (error) {
-            console.log("Error in getUsers store", error.message);
+            console.log("Error in getUsers store");
         }
     },
     getPosts: async () => {
@@ -35,7 +35,7 @@ export const useHomeStore = create((set) => ({
             const data = await res.json();
             set({ posts: data });
         } catch (error) {
-            console.log("Error in getPosts store", error.message);
+            console.log("Error in getPosts store");
         }
     },
 
@@ -49,7 +49,7 @@ export const useHomeStore = create((set) => ({
             const data = await res.json();
             // set({ posts: data });
         } catch (error) {
-            console.log("Error in addPosts store", error.message);
+            console.log("Error in addPosts store");
         }
     }
 }));
