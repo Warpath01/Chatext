@@ -3,7 +3,7 @@ import { useAuthStore } from "../../store/auth.store";
 import Users from "./Users";
 
 const Sidebar = () => {
-  const { updateProfile, checkAuth, myInfo, getPersonalInfo } = useAuthStore();
+  const { updateProfile, checkAuth, authUser, getPersonalInfo } = useAuthStore();
 
   const handleUploadImg = async (e) => {
     e.preventDefault();
@@ -17,8 +17,8 @@ const Sidebar = () => {
     checkAuth();
   };
   useEffect(() => {
-    // checkAuth();
-    getPersonalInfo();
+    checkAuth();
+    // getPersonalInfo();
   }, []);
 
   return (
@@ -47,14 +47,14 @@ const Sidebar = () => {
               color: "white",
             }}
           >
-            {myInfo?.profilePic ? (
+            {authUser?.profilePic ? (
   <img
-    src={`/profile-pics/${myInfo.profilePic}`}
+    src={`/profile-pics/${authUser.profilePic}`}
     alt="Profile"
     className="w-100 h-100 object-fit-cover"
   />
 ) : (
-  <span>{myInfo?.fullName?.charAt(0) || "?"}</span>
+  <span>{authUser?.fullName?.charAt(0) || "?"}</span>
 )}
           </div>
 
@@ -75,8 +75,8 @@ const Sidebar = () => {
         </div>
 
         {/* User Info */}
-        <h6 className="mb-0 mt-2">{myInfo.fullName  || "?"}</h6>
-        <p className="text-muted small">{myInfo.email  || "?"}</p>
+        <h6 className="mb-0 mt-2">{authUser.fullName  || "?"}</h6>
+        <p className="text-muted small">{authUser.email  || "?"}</p>
       </div>
 
       {/* Online Users Section */}
