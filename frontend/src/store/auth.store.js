@@ -97,7 +97,7 @@ export const useAuthStore = create(
                 const data = await res.json();
                 set({ myInfo: data });
             } catch (error) {
-                console.log("Error in getPersonalInfo store", error.message);
+                console.log("Error in getPersonalInfo store");
             } finally {
                 set({ isLoading: false });
             }
@@ -113,7 +113,7 @@ export const useAuthStore = create(
                 const data = await res.json();
                 return data;
             } catch (error) {
-                console.log("Error in updateProfile store", error.message);
+                console.log("Error in updateProfile store");
             } finally {
                 set({ isLoading: false });
             }
@@ -136,7 +136,7 @@ export const useAuthStore = create(
                 get().connectSocket();
             } catch (error) {
                 set({ authUser: null });
-                console.log("Error in signup store", error.message);
+                console.log("Error in signup store");
             } finally {
                 set({ isLoading: false });
             }
