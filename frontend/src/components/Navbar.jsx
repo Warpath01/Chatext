@@ -7,7 +7,6 @@ const Navbar = () => {
   const { logout, setIsLoading } = useAuthStore();
   const navigate = useNavigate();
   const handleLogout = () => {
-    setIsLoading(true);
     logout();
     navigate("/login");
   };
