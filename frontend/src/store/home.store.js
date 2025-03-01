@@ -17,13 +17,11 @@ export const useHomeStore = create((set) => ({
                 },
                 credentials: "include"
             });
-              if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+              if (!res.ok) throw new Error("No users!");
             const data = await res.json();
             set({ users: data });
         } catch (error) {
-            console.log("Error in getUsers store");
+            console.log("No users!");
         }
     },
     getPosts: async () => {
@@ -35,13 +33,11 @@ export const useHomeStore = create((set) => ({
                 },
                 credentials: "include"
             });
-              if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+              if (!res.ok) throw new Error("No Posts!");
             const data = await res.json();
             set({ posts: data });
         } catch (error) {
-            console.log("Error in getPosts store");
+            console.log("No Posts!");
         }
     },
 
@@ -52,13 +48,11 @@ export const useHomeStore = create((set) => ({
                 credentials: "include",
                 body: formData
             });
-              if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+             if (!res.ok) throw new Error("Error on adding Posts!");
             const data = await res.json();
             // set({ posts: data });
         } catch (error) {
-            console.log("Error in addPosts store");
+            console.log("Error on adding Posts!");
         }
     }
 }));
