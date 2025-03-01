@@ -17,7 +17,6 @@ const LoginForm = () => {
   // handle submit ---
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     await login(formData);
     navigate("/home");
   };
