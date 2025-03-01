@@ -3,9 +3,7 @@ import { useAuthStore } from "../store/auth.store";
 import { Link, useNavigate } from "react-router-dom"; // Import Link
 
 const Signup = () => {
-  const { signup } = useAuthStore();
-
-  const navigate = useNavigate();
+  const { signup, setIsLoading } = useAuthStore();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -14,9 +12,11 @@ const Signup = () => {
     password: "",
   });
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     signup(formData);
     navigate("/login");
   };
