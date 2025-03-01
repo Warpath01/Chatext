@@ -19,6 +19,9 @@ export const useChatStore = create((set, get) => ({
                 },
                 credentials: "include"
             });
+              if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
             const data = await res.json();
             set({ users: data });
         } catch (error) {
@@ -35,6 +38,9 @@ export const useChatStore = create((set, get) => ({
                 },
                 credentials: "include"
             });
+              if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
             const data = await res.json();
             set({ messages: data });
         } catch (error) {
@@ -54,6 +60,9 @@ export const useChatStore = create((set, get) => ({
                 body: JSON.stringify(message),
                 credentials: "include"
             });
+              if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
             const data = await res.json();
             set({ messages: [...messages, data] });
         } catch (error) {
@@ -70,6 +79,9 @@ export const useChatStore = create((set, get) => ({
                 },
                 credentials: "include"
             });
+              if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
             const data = await res.json();
             set({ messages: data });
         } catch (error) {
@@ -89,6 +101,9 @@ export const useChatStore = create((set, get) => ({
                 body: JSON.stringify(message),
                 credentials: "include"
             });
+              if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
             const data = await res.json();
             set({ messages: [...messages, data] });
         } catch (error) {
