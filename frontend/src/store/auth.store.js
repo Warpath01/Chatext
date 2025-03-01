@@ -9,47 +9,41 @@ const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000
 
 let socketInstance = null;
 
-export const useAuthStore = create(
-    persist(
-        (set, get) => ({
+export const useAuthStore = create((set, get) => ({
             authUser: null,
             isAuthenticated: false,
             myInfo: {},
             onlineContacts: [],
 
-            checkAuth: async () => {
-                try {
-                    const token = localStorage.getItem("jwt");
-
-                    const res = await fetch(`${BASE_URL}/api/auth/check`, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            ...(token && { Authorization: `Bearer ${token}` }),
-                        },
-                        credentials: "include",
-                    });
-
-                    if (res.status === 401) {
-                        set({ authUser: null, isAuthenticated: false });
-                        return;
-                    }
-
-                    if (!res.ok) throw new Error("Failed to authenticate");
-
-                    const data = await res.json();
-                    set({
-                        authUser: data && Object.keys(data).length ? data : null,
-                        isAuthenticated: !!data,
-                    });
-
-                    // Initialize the socket connection
-                    get().connectSocket();
-                } catch (error) {
-                    set({ authUser: null, isAuthenticated: false });
-                    console.log(error.message);
+            fetchWithInterceptor: async (url, options = {}) => {
+            set({ isLoading: true })
+            try {
+                const response = await fetch(url, { credentials: "include", ...options });
+                if (!response.ok) {
+                    console.warn("An error occurred.");
+                    throw new Error(`Request failed (${response.status})`);
                 }
-            },
+
+                return response.json();
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        checkAuth: async () => {
+            set({ isLoading: true })
+            try {
+                const data = await get().fetchWithInterceptor(`${BASE_URL}/api/auth/check`, { method: "GET" });
+                set({ authUser: data });
+                // Initialize the socket connection
+                get().connectSocket();
+            } catch (error) {
+                set({ authUser: null });
+                console.log(error);
+            } finally {
+                set({ isLoading: false });
+            }
+        },
 
             connectSocket: () => {
                 const { authUser } = get();
@@ -178,13 +172,6 @@ export const useAuthStore = create(
             },
 
         }),
-        {
-            name: "auth-storage",
-            partialize: (state) => Object.fromEntries(
-                Object.entries(state).filter(([key]) => key !== "socket") // Exclude socket from persisting
-            ),
-        }
-    )
 );
 
 
