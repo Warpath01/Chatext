@@ -4,11 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const { logout } = useAuthStore();
-
+  const { logout, setIsLoading } = useAuthStore();
   const navigate = useNavigate();
-
   const handleLogout = () => {
+    setIsLoading(true);
     logout();
     navigate("/login");
   };
@@ -16,7 +15,7 @@ const Navbar = () => {
     <div>
       <nav className="navbar navbar-light bg-light border-bottom p-1 ">
         <Link
-          to="/"
+          to="/home"
           className=" btn btn-outline-primary"
           href="#"
           style={{ width: "100px" }}
