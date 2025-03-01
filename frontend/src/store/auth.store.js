@@ -26,7 +26,7 @@ export const useAuthStore = create((set, get) => ({
 
                 return response.json();
             } catch (error) {
-                console.log(error);
+                console.log("There is error");
             }
         },
 
@@ -39,7 +39,7 @@ export const useAuthStore = create((set, get) => ({
                 get().connectSocket();
             } catch (error) {
                 set({ authUser: null });
-                console.log(error);
+                 console.log("There is error");
             } finally {
                 set({ isLoading: false });
             }
