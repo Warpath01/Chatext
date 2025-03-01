@@ -16,52 +16,26 @@ export const useAuthStore = create(
         authUser: null,
         isLoading: false,
 
-
-       fetchWithInterceptor: async (url, options = {}) => {
-    set({ isLoading: true });
-    try {
-        const response = await fetch(url, { credentials: "include", ...options });
-        
-        // Log response status and headers
-        console.log("Fetch response status:", response.status);
-        console.log("Fetch response headers:", [...response.headers]);
-
-        if (!response.ok) throw new Error(`Request failed (${response.status})`);
-        
-        const contentType = response.headers.get("content-type") || "";
-        console.log("Content-Type:", contentType);
-        
-        if (!contentType.includes("application/json")) {
-            throw new Error("Invalid response format");
-        }
-
-        return response.json();
-    } catch (error) {
-        console.error("Fetch error:", error);
-        throw error;
-    } finally {
-        set({ isLoading: false });
-    }
-};
-
-
-
-
-
         checkAuth: async () => {
+                try {
+                    const res = await fetch(`${BASE_URL}/api/auth/check`, {
+                        method: "GET",
+                        credentials: "include",
+                    });
+                    if (!res.ok) throw new Error(`Request failed (${response.status})`);
+                    const data = await res.json();
+                    set({ authUser: data });
+                    console.log(data);
 
-            try {
-                const data = await get().fetchWithInterceptor(`${BASE_URL}/api/auth/check`, { method: "GET" });
-                set({ authUser: data });
-                // Initialize the socket connection
-                get().connectSocket();
-            } catch (error) {
-                set({ authUser: null });
-                console.log("error checkAuth");
-            } finally {
-                set({ isLoading: false });
-            }
-        },
+                    // Initialize the socket connection
+                    get().connectSocket();
+                } catch (error) {
+                    set({ authUser: null });
+                    console.log(error.message);
+                } finally {
+                    set({ isLoading: false });
+                }
+            },
 
         connectSocket: () => {
             const { authUser } = get();
