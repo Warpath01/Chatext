@@ -17,6 +17,9 @@ export const useHomeStore = create((set) => ({
                 },
                 credentials: "include"
             });
+              if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
             const data = await res.json();
             set({ users: data });
         } catch (error) {
@@ -32,6 +35,9 @@ export const useHomeStore = create((set) => ({
                 },
                 credentials: "include"
             });
+              if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
             const data = await res.json();
             set({ posts: data });
         } catch (error) {
@@ -46,6 +52,9 @@ export const useHomeStore = create((set) => ({
                 credentials: "include",
                 body: formData
             });
+              if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
             const data = await res.json();
             // set({ posts: data });
         } catch (error) {
