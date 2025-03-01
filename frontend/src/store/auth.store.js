@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { useChatStore } from "./chat.store";
 
-const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "/";
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "https://chatext-elfm.onrender.com";
 
 let socketInstance = null;
 
