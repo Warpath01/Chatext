@@ -31,7 +31,7 @@ export const useAuthStore = create(
     } finally {
         set({ isLoading: false });
     }
-};
+},
 
 
 
