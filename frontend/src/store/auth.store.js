@@ -17,21 +17,33 @@ export const useAuthStore = create(
         isLoading: false,
 
 
-        fetchWithInterceptor: async (url, options = {}) => {
+       fetchWithInterceptor: async (url, options = {}) => {
     set({ isLoading: true });
     try {
         const response = await fetch(url, { credentials: "include", ...options });
+        
+        // Log response status and headers
+        console.log("Fetch response status:", response.status);
+        console.log("Fetch response headers:", [...response.headers]);
+
         if (!response.ok) throw new Error(`Request failed (${response.status})`);
-        return response.headers.get("content-type")?.includes("application/json") 
-            ? response.json() 
-            : Promise.reject("Invalid response format");
+        
+        const contentType = response.headers.get("content-type") || "";
+        console.log("Content-Type:", contentType);
+        
+        if (!contentType.includes("application/json")) {
+            throw new Error("Invalid response format");
+        }
+
+        return response.json();
     } catch (error) {
         console.error("Fetch error:", error);
         throw error;
     } finally {
         set({ isLoading: false });
     }
-},
+};
+
 
 
 
