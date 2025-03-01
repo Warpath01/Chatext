@@ -17,28 +17,23 @@ export const useAuthStore = create(
         isLoading: false,
 
         checkAuth: async () => {
-    try {
-        const res = await fetch(`${BASE_URL}/api/auth/check`, {
-            method: "GET",
-            credentials: "include",
-        });
-
-        if (!res.ok) throw new Error(`Request failed (${res.status})`); // Fixed variable reference
-
-        const data = await res.json();
-        set({ authUser: data });
-        console.log("Authenticated user:", data);
-
-        // Initialize the socket connection
-        get().connectSocket();
-    } catch (error) {
-        set({ authUser: null });
-        console.log("Error in checkAuth:",error); // Improved logging
-    } finally {
-        set({ isLoading: false });
-    }
-},
-
+            set({ isLoading: true });
+            try {
+                const res = await fetch(`${BASE_URL}/api/auth/check`, {
+                    method: "GET",
+                    credentials: "include"
+                });
+                if (!res.ok) throw new Error("Not logged in");
+                const data = await res.json();
+                set({ authUser: data });
+                get().connectSocket();
+            } catch (error) {
+                console.log("Not logged in");
+                set({ authUser: null });
+            } finally {
+                set({ isLoading: false });
+            }
+        },
 
         connectSocket: () => {
             const { authUser } = get();
@@ -81,13 +76,12 @@ export const useAuthStore = create(
                     },
                     credentials: "include",
                 });
-                  if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+                if (!res.ok) throw new Error("Error in getting personal info!");
                 const data = await res.json();
                 set({ myInfo: data });
             } catch (error) {
-                console.log("Error in getPersonalInfo store");
+                set({ myInfo: null });
+                console.log("Error in getting personal info!");
             } finally {
                 set({ isLoading: false });
             }
@@ -100,13 +94,11 @@ export const useAuthStore = create(
                     credentials: "include",
                     body: formData,
                 });
-                  if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+                if (!res.ok) throw new Error("Error in Uploading!");
                 const data = await res.json();
                 return data;
             } catch (error) {
-                console.log("Error in updateProfile store");
+                console.log("Error in Uploading!");
             } finally {
                 set({ isLoading: false });
             }
@@ -122,9 +114,6 @@ export const useAuthStore = create(
                     credentials: "include",
                     body: JSON.stringify(info),
                 });
-                  if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
 
                 const data = await res.json();
                 set({ authUser: data });
@@ -132,31 +121,29 @@ export const useAuthStore = create(
                 get().connectSocket();
             } catch (error) {
                 set({ authUser: null });
-                console.log("Error in signup store");
             } finally {
                 set({ isLoading: false });
             }
         },
 
         login: async (info) => {
+
             try {
                 const res = await fetch(`${BASE_URL}/api/auth/login`, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                     credentials: "include",
-                    body: JSON.stringify(info),
+                    body: JSON.stringify(info)
                 });
-                  if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+
+                if (!res.ok) throw new Error("Invalid Credentials!");
+
                 const data = await res.json();
                 set({ authUser: data });
                 get().connectSocket();
             } catch (error) {
+                console.log("Invalid Credentials!");
                 set({ authUser: null });
-                console.log(error.message);
             } finally {
                 set({ isLoading: false });
             }
@@ -164,21 +151,19 @@ export const useAuthStore = create(
 
         logout: async () => {
             try {
-                await fetch(`${BASE_URL}/api/auth/logout`, {
+                const res = await fetch(`${BASE_URL}/api/auth/logout`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     credentials: "include",
                 });
-                  if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+                if (!res.ok) throw new Error("Error during logout!");
                 set({ authUser: null });
                 console.log("Logged out successfully!");
                 get().disConnectSocket();
             } catch (error) {
-                console.log("Error in logout store", error.message);
+                console.log("Error during logout!");
             } finally {
                 set({ isLoading: false });
             }
@@ -188,3 +173,4 @@ export const useAuthStore = create(
         setAuthUser: (authUser) => set({ authUser }),
     }),
 );
+
