@@ -51,16 +51,15 @@ const __dirname = path.dirname(__filename);
 const __otherDirname = path.resolve()
 
 // allow static use -- 
-app.use('/profile-pics', express.static(path.join(__dirname, 'uploaded', 'profilepics')));
-app.use('/post-pics', express.static(path.join(__dirname, 'uploaded', 'posts')));
-
-
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
     app.get("*", (req, res) => {
         res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
     })
+
+    app.use('/profile-pics', express.static(path.join(__dirname, 'uploaded', 'profilepics')));
+    app.use('/post-pics', express.static(path.join(__dirname, 'uploaded', 'posts')));
 }
 
 const startServer = async () => {
