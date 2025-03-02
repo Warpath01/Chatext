@@ -36,7 +36,6 @@ export const useAuthStore = create(
             // },
 
             checkAuth: async () => {
-                set({ isLoading: true });
                 try {
                     const token = get().accessToken
                     let res = await fetch(`${BASE_URL}/api/auth/check`, {
