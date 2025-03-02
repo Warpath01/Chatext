@@ -10,173 +10,213 @@ const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000
 let socketInstance = null;
 
 export const useAuthStore = create(
-     persist(
-    (set, get) => ({
-        myInfo: {},
-        onlineContacts: [],
-        authUser: null,
-        isLoading: false,
+    persist(
+        (set, get) => ({
+            myInfo: {},
+            onlineContacts: [],
+            accessToken: null,
+            authUser: null,
+            isLoading: false,
+            // refreshAccessToken: async () => {
+            //     try {
+            //         const res = await fetch(`${BASE_URL}/api/auth/refresh`, {
+            //             method: "POST",
+            //             credentials: "include", // Include cookies
+            //         });
+            //         if (!res.ok) throw new Error("Failed to refresh token");
 
-        checkAuth: async () => {
-            set({ isLoading: true });
-            try {
-                const res = await fetch(`${BASE_URL}/api/auth/check`, {
-                    method: "GET",
-                    credentials: "include"
-                });
-                if (!res.ok) throw new Error("Not logged in");
-                const data = await res.json();
-                set({ authUser: data });
-                get().connectSocket();
-            } catch (error) {
-                console.log("Not logged in");
-                set({ authUser: null });
-            } finally {
-                set({ isLoading: false });
-            }
-        },
+            //         const data = await res.json();
+            //         set({ authToken: data.accessToken }); // Store new token
+            //         return data.accessToken;
+            //     } catch (error) {
+            //         console.log("Refresh token failed");
+            //         set({ authUser: null, authToken: null });
+            //         return null;
+            //     }
+            // },
 
-        connectSocket: () => {
-            const { authUser } = get();
-            if (!authUser) return; // Ensure user is logged in
+            checkAuth: async () => {
+                set({ isLoading: true });
+                try {
+                    const token = get().accessToken
+                    let res = await fetch(`${BASE_URL}/api/auth/check`, {
+                        method: "GET",
+                        credentials: "include",
+                        headers: { "Authorization": `Bearer ${token}` },
+                    });
 
-            if (!socketInstance) {
-                socketInstance = io(BASE_URL, {
-                    query: { userId: authUser._id },
-                    autoConnect: false, // Ensures manual connection control
-                });
-            }
+                    // if (res.status === 401) { // Token expired
+                    //     token = await refreshAccessToken();
+                    //     if (!token) throw new Error("Not logged in");
 
-            if (!socketInstance.connected) {
-                socketInstance.connect();
-            }
+                    //     res = await fetch(`${BASE_URL}/api/auth/check`, {
+                    //         method: "GET",
+                    //         credentials: "include",
+                    //         headers: { "Authorization": `Bearer ${token}` }
+                    //     });
+                    // }
 
-            socketInstance.on("getOnlineUsers", (userIds) => {
-                set({ onlineContacts: userIds });
-            });
+                    if (!res.ok) throw new Error("Not logged in");
+                    const data = await res.json();
+                    set({ authUser: data });
+                    get().connectSocket();
+                } catch (error) {
+                    console.log("Not logged in");
+                    set({ authUser: null });
+                } finally {
+                    set({ isLoading: false });
+                }
+            },
 
-            socketInstance.on("connect_error", (err) => {
-                console.error("WebSocket Connection Error:", err.message);
-            });
-        },
 
-        disConnectSocket: () => {
-            if (socketInstance) {
-                socketInstance.disconnect();
-            }
-        },
+            connectSocket: () => {
+                const { authUser } = get();
+                if (!authUser) return; // Ensure user is logged in
 
-        getSocket: () => socketInstance,
+                if (!socketInstance) {
+                    socketInstance = io(BASE_URL, {
+                        query: { userId: authUser._id },
+                        autoConnect: false, // Ensures manual connection control
+                    });
+                }
 
-        getPersonalInfo: async () => {
-            try {
-                const res = await fetch(`${BASE_URL}/api/auth/personal`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                });
-                if (!res.ok) throw new Error("Error in getting personal info!");
-                const data = await res.json();
-                set({ myInfo: data });
-            } catch (error) {
-                set({ myInfo: null });
-                console.log("Error in getting personal info!");
-            } finally {
-                set({ isLoading: false });
-            }
-        },
+                if (!socketInstance.connected) {
+                    socketInstance.connect();
+                }
 
-        updateProfile: async (formData) => {
-            try {
-                const res = await fetch(`${BASE_URL}/api/auth/update-profile`, {
-                    method: "PUT",
-                    credentials: "include",
-                    body: formData,
-                });
-                if (!res.ok) throw new Error("Error in Uploading!");
-                const data = await res.json();
-                return data;
-            } catch (error) {
-                console.log("Error in Uploading!");
-            } finally {
-                set({ isLoading: false });
-            }
-        },
-
-        signup: async (info) => {
-            try {
-                const res = await fetch(`${BASE_URL}/api/auth/signup`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                    body: JSON.stringify(info),
+                socketInstance.on("getOnlineUsers", (userIds) => {
+                    set({ onlineContacts: userIds });
                 });
 
-                const data = await res.json();
-                set({ authUser: data });
-                console.log("Signed up successfully!");
-                get().connectSocket();
-            } catch (error) {
-                set({ authUser: null });
-            } finally {
-                set({ isLoading: false });
-            }
-        },
-
-        login: async (info) => {
-
-            try {
-                const res = await fetch(`${BASE_URL}/api/auth/login`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                    body: JSON.stringify(info)
+                socketInstance.on("connect_error", (err) => {
+                    console.error("WebSocket Connection Error:", err.message);
                 });
+            },
 
-                if (!res.ok) throw new Error("Invalid Credentials!");
+            disConnectSocket: () => {
+                if (socketInstance) {
+                    socketInstance.disconnect();
+                }
+            },
 
-                const data = await res.json();
-                set({ authUser: data });
-                get().connectSocket();
-            } catch (error) {
-                console.log("Invalid Credentials!");
-                set({ authUser: null });
-            } finally {
-                set({ isLoading: false });
-            }
-        },
+            getSocket: () => socketInstance,
 
-        logout: async () => {
-            try {
-                const res = await fetch(`${BASE_URL}/api/auth/logout`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                });
-                if (!res.ok) throw new Error("Error during logout!");
-                set({ authUser: null });
-                console.log("Logged out successfully!");
-                get().disConnectSocket();
-            } catch (error) {
-                console.log("Error during logout!");
-            } finally {
-                set({ isLoading: false });
-            }
-        },
+            // getPersonalInfo: async () => {
+            //     try {
+            //         const res = await fetch(`${BASE_URL}/api/auth/personal`, {
+            //             method: "GET",
+            //             headers: {
+            //                 "Content-Type": "application/json",
+            //             },
+            //             credentials: "include",
+            //         });
+            //         if (!res.ok) throw new Error("Error in getting personal info!");
+            //         const data = await res.json();
+            //         set({ myInfo: data });
+            //     } catch (error) {
+            //         set({ myInfo: null });
+            //         console.log("Error in getting personal info!");
+            //     } finally {
+            //         set({ isLoading: false });
+            //     }
+            // },
 
-        setIsLoading: (isLoading) => set({ isLoading }),
-        setAuthUser: (authUser) => set({ authUser }),
-    }),
-         {
-      name: "auth-storage", // Key for storage
-      getStorage: () => sessionStorage, // Use sessionStorage instead of localStorage
-    }
-  )
+            updateProfile: async (formData) => {
+                const token = get().accessToken
+                try {
+                    const res = await fetch(`${BASE_URL}/api/auth/update-profile`, {
+                        method: "PUT",
+                        credentials: "include",
+                        headers: { "Authorization": `Bearer ${token}` },
+                        body: formData,
+                    });
+                    if (!res.ok) throw new Error("Error in Uploading!");
+                    const data = await res.json();
+                    return data;
+                } catch (error) {
+                    console.log("Error in Uploading!");
+                } finally {
+                    set({ isLoading: false });
+                }
+            },
+
+            signup: async (info) => {
+                try {
+                    const res = await fetch(`${BASE_URL}/api/auth/signup`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: "include",
+                        body: JSON.stringify(info),
+                    });
+                    await res.json();
+                    console.log("Signed up successfully!");
+                    get().connectSocket();
+                } catch (error) {
+                    console.log(error);
+                } finally {
+                    set({ isLoading: false });
+                }
+            },
+
+            login: async (info) => {
+                try {
+                    const res = await fetch(`${BASE_URL}/api/auth/login`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify(info),
+                    });
+
+                    if (!res.ok) throw new Error("Invalid Credentials!");
+
+                    const data = await res.json();
+                    const { accessToken, ...myInfo } = data;
+                    set({ accessToken, myInfo });
+                    get().checkAuth()
+                    get().connectSocket();
+                } catch (error) {
+                    console.log("Invalid Credentials!", error);
+                    set({ authUser: null });
+                } finally {
+                    set({ isLoading: false });
+                }
+            },
+
+            logout: async () => {
+                try {
+                    const res = await fetch(`${BASE_URL}/api/auth/logout`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: "include",
+                    });
+                    if (!res.ok) throw new Error("Error during logout!");
+
+                    set({ authUser: null, accessToken: null, myInfo: {}, onlineContacts: [] });
+                    // sessionStorage.removeItem("session-user-storage");
+
+                    get().disConnectSocket();
+
+                    console.log("Logged out successfully!");
+                } catch (error) {
+                    console.log("Error during logout!");
+                } finally {
+                    set({ isLoading: false });
+                }
+            },
+
+            setIsLoading: (isLoading) => set({ isLoading }),
+            setAuthUser: (authUser) => set({ authUser }),
+        }),
+        {
+            name: "session-user-storage",
+            getStorage: () => sessionStorage, // Uses sessionStorage
+        }
+    )
 );
+
+
 
