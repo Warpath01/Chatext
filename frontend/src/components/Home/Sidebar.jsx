@@ -23,7 +23,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     getPersonalInfo();
-  }, []); // Ensuring it only runs on mount
+  }, [getPersonalInfo]);
 
   return (
     <div
