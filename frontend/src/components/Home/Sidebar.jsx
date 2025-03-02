@@ -3,7 +3,7 @@ import { useAuthStore } from "../../store/auth.store";
 import Users from "./Users";
 
 const Sidebar = () => {
-  const { updateProfile, checkAuth, authUser } = useAuthStore();
+  const { updateProfile, checkAuth, authUser, myInfo,getPersonalInfo } = useAuthStore();
 
   const handleUploadImg = async (e) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-    checkAuth();
+    getPersonalInfo();
   }, []); // Ensuring it only runs on mount
 
   return (
@@ -43,14 +43,14 @@ const Sidebar = () => {
             className="rounded-circle bg-secondary d-flex justify-content-center align-items-center overflow-hidden border shadow"
             style={{ width: "100px", height: "100px", fontSize: "24px", color: "white" }}
           >
-            {authUser?.profilePic ? (
+            {myInfo?.profilePic ? (
               <img
-                src={`/profile-pics/${authUser.profilePic}`}
+                src={`/profile-pics/${myInfo.profilePic}`}
                 alt="Profile"
                 className="w-100 h-100 object-fit-cover"
               />
             ) : (
-              <span>{authUser?.fullName?.charAt(0) || "?"}</span>
+              <span>{myInfo?.fullName?.charAt(0) || "?"}</span>
             )}
           </div>
           {/* Update Button */}
@@ -61,8 +61,8 @@ const Sidebar = () => {
           </div>
         </div>
         {/* User Info */}
-        <h6 className="mb-0 mt-2">{authUser?.fullName || "?"}</h6>
-        <p className="text-muted small">{authUser?.email || "?"}</p>
+        <h6 className="mb-0 mt-2">{myInfo?.fullName || "?"}</h6>
+        <p className="text-muted small">{myInfo?.email || "?"}</p>
       </div>
 
       {/* Online Users Section */}
