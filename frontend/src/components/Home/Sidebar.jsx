@@ -3,27 +3,24 @@ import { useAuthStore } from "../../store/auth.store";
 import Users from "./Users";
 
 const Sidebar = () => {
-  const { updateProfile, checkAuth, authUser, myInfo,getPersonalInfo } = useAuthStore();
+  const { updateProfile, checkAuth, authUser, getPersonalInfo } =
+    useAuthStore();
 
   const handleUploadImg = async (e) => {
     e.preventDefault();
-    const file = e.target.files?.[0];
+    const file = e.target.files[0];
     if (!file) return;
 
     const formData = new FormData();
     formData.append("profilePic", file);
 
-    try {
-      await updateProfile(formData);
-      await checkAuth(); // Ensure authentication is checked after update
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    }
+    await updateProfile(formData);
+    checkAuth();
   };
-
   useEffect(() => {
-    getPersonalInfo();
-  }, [getPersonalInfo]);
+    // checkAuth();
+    // getPersonalInfo();
+  }, []);
 
   return (
     <div
@@ -36,33 +33,51 @@ const Sidebar = () => {
       }}
     >
       {/* Profile Section */}
-      <div className="d-flex flex-column align-items-center text-center mb-3">
+      <div
+        className="d-flex flex-column align-items-center text-center mb-3"
+        style={{ flex: "0 1 auto" }}
+      >
         {/* Profile Picture */}
         <div className="position-relative">
           <div
             className="rounded-circle bg-secondary d-flex justify-content-center align-items-center overflow-hidden border shadow"
-            style={{ width: "100px", height: "100px", fontSize: "24px", color: "white" }}
+            style={{
+              width: "100px",
+              height: "100px",
+              fontSize: "24px",
+              color: "white",
+            }}
           >
-            {myInfo?.profilePic ? (
+            {authUser.profilePic ? (
               <img
-                src={`/profile-pics/${myInfo.profilePic}`}
+                src={`/profile-pics/${authUser.profilePic}`}
                 alt="Profile"
                 className="w-100 h-100 object-fit-cover"
               />
             ) : (
-              <span>{myInfo?.fullName?.charAt(0) || "?"}</span>
+              <span>{authUser.fullName?.charAt(0)}</span>
             )}
           </div>
+
           {/* Update Button */}
           <div className="position-absolute bottom-0 end-0">
-            <label className="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow" style={{ width: "35px", height: "35px", cursor: "pointer" }}>
-              <input type="file" accept="image/*" onChange={handleUploadImg} className="d-none" />
+            <label
+              className="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow"
+              style={{ width: "35px", height: "35px", cursor: "pointer" }}
+            >
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleUploadImg}
+                className="d-none"
+              />
             </label>
           </div>
         </div>
+
         {/* User Info */}
-        <h6 className="mb-0 mt-2">{myInfo?.fullName || "?"}</h6>
-        <p className="text-muted small">{myInfo?.email || "?"}</p>
+        <h6 className="mb-0 mt-2">{authUser.fullName}</h6>
+        <p className="text-muted small">{authUser.email}</p>
       </div>
 
       {/* Online Users Section */}
