@@ -12,7 +12,7 @@ const Messages = () => {
     receiveMessage,
     unReceiveMessage,
   } = useChatStore();
-  const { getPersonalInfo, myInfo, checkAuth } = useAuthStore();
+  const { checkAuth } = useAuthStore();
   const { getUsers, users } = useHomeStore();
 
   const messageEndRef = useRef(null);
@@ -21,7 +21,6 @@ const Messages = () => {
     getPersonalMessage(selectedUser._id);
 
     receiveMessage();
-    getPersonalInfo();
     getUsers();
     return () => unReceiveMessage();
   }, [selectedUser._id]);
@@ -38,7 +37,7 @@ const Messages = () => {
           <div
             key={message._id}
             className={`d-flex flex mt-4 ${
-              message.senderId !== myInfo._id
+              message.senderId !== checkAuth._id
                 ? "justify-content-start"
                 : "justify-content-end"
             }`}
