@@ -174,7 +174,7 @@ export const useAuthStore = create(
                          const data = await res.json();
                     const { accessToken, ...myInfo } = data;
                     set({ accessToken, myInfo });
-                    get().checkAuth()
+                    // get().checkAuth()
                     get().connectSocket();
                     }
 
