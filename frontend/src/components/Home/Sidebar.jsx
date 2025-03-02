@@ -13,13 +13,17 @@ const Sidebar = () => {
     const formData = new FormData();
     formData.append("profilePic", file);
 
-    await updateProfile(formData);
-    checkAuth();
+    try {
+      await updateProfile(formData);
+      await checkAuth(); // Ensure authentication is checked after update
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+  }, []); // Ensuring it only runs on mount
 
   return (
     <div
@@ -32,20 +36,12 @@ const Sidebar = () => {
       }}
     >
       {/* Profile Section */}
-      <div
-        className="d-flex flex-column align-items-center text-center mb-3"
-        style={{ flex: "0 1 auto" }}
-      >
+      <div className="d-flex flex-column align-items-center text-center mb-3">
         {/* Profile Picture */}
         <div className="position-relative">
           <div
             className="rounded-circle bg-secondary d-flex justify-content-center align-items-center overflow-hidden border shadow"
-            style={{
-              width: "100px",
-              height: "100px",
-              fontSize: "24px",
-              color: "white",
-            }}
+            style={{ width: "100px", height: "100px", fontSize: "24px", color: "white" }}
           >
             {authUser?.profilePic ? (
               <img
@@ -57,23 +53,13 @@ const Sidebar = () => {
               <span>{authUser?.fullName?.charAt(0) || "?"}</span>
             )}
           </div>
-
           {/* Update Button */}
           <div className="position-absolute bottom-0 end-0">
-            <label
-              className="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow"
-              style={{ width: "35px", height: "35px", cursor: "pointer" }}
-            >
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleUploadImg}
-                className="d-none"
-              />
+            <label className="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow" style={{ width: "35px", height: "35px", cursor: "pointer" }}>
+              <input type="file" accept="image/*" onChange={handleUploadImg} className="d-none" />
             </label>
           </div>
         </div>
-
         {/* User Info */}
         <h6 className="mb-0 mt-2">{authUser?.fullName || "?"}</h6>
         <p className="text-muted small">{authUser?.email || "?"}</p>
