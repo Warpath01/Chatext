@@ -9,50 +9,56 @@ export const useHomeStore = create((set) => ({
     selectedUser: null,
 
     getUsers: async () => {
+        const token = useAuthStore.getState().accessToken;
         try {
             const res = await fetch(`${BASE_URL}/api/posts/users`, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
-                credentials: "include"
+                credentials: "include",
+                headers: { "Authorization": `Bearer ${token}` },
             });
-              if (!res.ok) throw new Error("No users!");
             const data = await res.json();
             set({ users: data });
         } catch (error) {
-            console.log("No users!");
+            console.log("Error in getUsers store", error.message)
+            set({ users: [] });
+            res.status(500).json({ message: "Internal Server Error." })
         }
     },
     getPosts: async () => {
+        const token = useAuthStore.getState().accessToken;
         try {
             const res = await fetch(`${BASE_URL}/api/posts/all`, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
-                credentials: "include"
-            });
-              if (!res.ok) throw new Error("No Posts!");
+                credentials: "include",
+                headers: { "Authorization": `Bearer ${token}` },
+            })
             const data = await res.json();
             set({ posts: data });
         } catch (error) {
-            console.log("No Posts!");
+            console.log("Error in getUsers store", error.message)
+            res.status(500).json({ message: "Internal Server Error." })
         }
     },
 
     addPosts: async (formData) => {
+        const token = useAuthStore.getState().accessToken;
         try {
             const res = await fetch(`${BASE_URL}/api/posts/add`, {
                 method: "POST",
                 credentials: "include",
+                headers: { "Authorization": `Bearer ${token}` },
                 body: formData
             });
-             if (!res.ok) throw new Error("Error on adding Posts!");
             const data = await res.json();
             // set({ posts: data });
         } catch (error) {
-            console.log("Error on adding Posts!");
+            console.log("Error in addPosts store", error.message);
         }
-    }
-}));
+    },
+}))
