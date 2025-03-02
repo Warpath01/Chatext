@@ -1,6 +1,6 @@
 import User from "../models/user.models.js";
 import bcrypt from "bcryptjs"
-import { generateToken } from "../utils/utils.js";
+import { generateTokens } from "../utils/utils.js";
 import Post from "../models/post.model.js";
 
 
@@ -32,10 +32,7 @@ export const signup = async (req, res) => {
             fullName: `${firstName} ${lastName}`,
             password: hashedPassword,
         });
-
         await newUser.save();
-        generateToken(newUser._id, res);
-
         res.status(201).json({
             message: "User successfully created.",
             id: newUser._id,
@@ -65,14 +62,18 @@ export const login = async (req, res) => {
         if (!isCorrectPass) {
             return res.status(400).json({ message: "Invalid credentials." });
         }
-        generateToken(user._id, res);
-        res.status(201).json({
-            message: "User successfully Logged in.",
+        // Generate Access & Refresh Tokens
+        const { accessToken } = generateTokens(user._id, res);
+
+        // Respond with user info and access token
+        res.status(200).json({
+            message: "User successfully logged in.",
             id: user._id,
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
             fullName: user.fullName,
+            accessToken, // Return access token
         });
     } catch (error) {
         console.log("Error in login controller", error.message);
