@@ -10,7 +10,7 @@ const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000
 let socketInstance = null;
 
 export const useAuthStore = create(
-    // persist(
+    persist(
         (set, get) => ({
             myInfo: {},
             onlineContacts: [],
@@ -174,7 +174,7 @@ export const useAuthStore = create(
                          const data = await res.json();
                     const { accessToken, ...myInfo } = data;
                     set({ accessToken, myInfo });
-                    // get().checkAuth()
+                    get().checkAuth()
                     get().connectSocket();
                     }
 
@@ -215,11 +215,11 @@ export const useAuthStore = create(
             setIsLoading: (isLoading) => set({ isLoading }),
             setAuthUser: (authUser) => set({ authUser }),
         }),
-    //     {
-    //         name: "session-user-storage",
-    //         getStorage: () => sessionStorage, // Uses sessionStorage
-    //     }
-    // )
+        {
+            name: "session-user-storage",
+            getStorage: () => sessionStorage, // Uses sessionStorage
+        }
+    )
 );
 
 
