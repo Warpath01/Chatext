@@ -170,11 +170,16 @@ export const useAuthStore = create(
 
                     if (!res.ok) throw new Error("Invalid Credentials!");
 
-                    const data = await res.json();
+                    if(res.ok) {
+                         const data = await res.json();
                     const { accessToken, ...myInfo } = data;
                     set({ accessToken, myInfo });
                     get().checkAuth()
                     get().connectSocket();
+                    }
+
+
+                   
                 } catch (error) {
                     console.log("Invalid Credentials!", error);
                     set({ authUser: null });
