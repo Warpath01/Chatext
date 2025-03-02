@@ -30,12 +30,9 @@ const Posts = () => {
                   color: "white",
                 }}
               >
-                {post.senderImage ? (
+                {authUser.profilePic ? (
                   <img
-                    src={
-                      `/profile-pics/${post.senderImage}` ||
-                      `/profile-pics/${authUser.profilePic}`
-                    }
+                    src={`/profile-pics/${authUser.profilePic}`}
                     alt="Profile"
                     className="rounded-circle"
                     style={{
