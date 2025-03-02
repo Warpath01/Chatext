@@ -12,7 +12,7 @@ const Messages = () => {
     receivePublicMessages,
     unReceivePublicMessages,
   } = useChatStore();
-  const { getPersonalInfo, myInfo } = useAuthStore();
+  const { authUser } = useAuthStore();
   const { getUsers, users } = useHomeStore();
 
   const messageEndRef = useRef(null);
@@ -20,7 +20,6 @@ const Messages = () => {
   useEffect(() => {
     getPublicMessages();
     receivePublicMessages();
-    getPersonalInfo();
     getUsers();
 
     return () => unReceivePublicMessages();
@@ -38,7 +37,7 @@ const Messages = () => {
           <div
             key={message._id}
             className={`d-flex flex mt-2 ${
-              message.senderId !== myInfo._id
+              message.senderId !== authUser._id
                 ? "justify-content-start"
                 : "justify-content-end"
             }`}
