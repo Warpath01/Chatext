@@ -15,65 +15,52 @@ import { app, server } from "./config/socket.js";
 
 
 dotenv.config();
-// OR allow all origins (for development purposes)
-app.use(
-    cors({
-        origin: process.env.NODE_ENV === "development" ? "http://localhost:5173" : "https://chatext-client.onrender.com",
-        credentials: true,
-        allowedHeaders: ["Content-Type", "Authorization"], // Allow Authorization header
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Specify allowed HTTP methods
-    })
-);
-
-app.options("*", cors());
-
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://chatext-client.onrender.com"); // Allow frontend domain
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    next();
-});
+// CORS configuration
+app.use(cors({
+    origin: process.env.NODE_ENV === "development" ? "http://localhost:5173" : "https://chatext-client.onrender.com",
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+}));
 
 app.use(express.json());
 app.use(cookieParser());
+
+// API Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messagesRoutes);
+app.use("/api/posts", postsRoutes);
 
 app.get("/", (req, res) => {
     res.send("This Server is Ready!");
 });
 
-const PORT = process.env.PORT || 7000;
-
-
-// Get the directory name of the current module
+// Static Files Serving (Only in Production)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const __otherDirname = path.resolve()
 
-// allow static use -- 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
     app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
-    })
+        res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+    });
 
     app.use('/profile-pics', express.static(path.join(__dirname, 'uploaded', 'profilepics')));
     app.use('/post-pics', express.static(path.join(__dirname, 'uploaded', 'posts')));
 }
 
+// Start Server
+const PORT = process.env.PORT || 7000;
+
 const startServer = async () => {
     await connectDB();
-
-    // Use routes endpoints-----
-    app.use("/api/auth", authRoutes)
-    app.use("/api/messages", messagesRoutes)
-    app.use("/api/posts", postsRoutes)
 
     server.listen(PORT, () => {
         console.log(`Server started at http://localhost:${PORT}`);
     });
 };
+
 startServer();
 
 export default app;
