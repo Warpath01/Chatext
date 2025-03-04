@@ -56,8 +56,8 @@ if (process.env.NODE_ENV === "production") {
         res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
     });
 
-    app.use('/profile-pics', express.static(path.resolve(__dirname, 'uploaded/profilepics')));
-app.use('/post-pics', express.static(path.resolve(__dirname, 'uploaded/posts')));
+    app.use('/profile-pics', express.static(path.join(__dirname, 'uploaded/profilepics')));
+app.use('/post-pics', express.static(path.join(__dirname, 'uploaded/posts')));
 }
 
 // Start Server
