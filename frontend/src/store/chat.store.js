@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { useAuth } from "../context/AuthContext";
 import { useAuthStore } from "./auth.store";
 
-const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "https://chatext-elfm.onrender.com";
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "chatext-server-n859tr5cq-warps-projects-5dfd9456.vercel.app";
 
 export const useChatStore = create((set, get) => ({
     messages: [],
