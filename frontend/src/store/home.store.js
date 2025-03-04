@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { create } from "zustand";
-
+import { useAuthStore } from "./auth.store";
 const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:7000" : "https://chatext-elfm.onrender.com";
 
 export const useHomeStore = create((set) => ({
